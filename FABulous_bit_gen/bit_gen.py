@@ -69,6 +69,7 @@ def genBitstream(fasmFile: str, specFile: str, bitstreamFile: str) -> None:
 
     FrameBitsPerRow = specDict["ArchSpecs"]["FrameBitsPerRow"]
     MaxFramesPerCol = specDict["ArchSpecs"]["MaxFramesPerCol"]
+    legacy = specDict.get("legacy", True)
 
     # Change this so it has the actual right dimensions, initialised as
     # an empty bitstream
@@ -112,7 +113,7 @@ def genBitstream(fasmFile: str, specFile: str, bitstreamFile: str) -> None:
             else:
                 raise SpecMissMatch(
                     f"Tile type: {tileType}\n"
-                    "with location {tileLoc} and \n"
+                    f"with location {tileLoc} and \n"
                     f"Feature: {featureName}\n"
                     "found in fasm file was not found in the bitstream spec"
                 )
@@ -159,9 +160,18 @@ def genBitstream(fasmFile: str, specFile: str, bitstreamFile: str) -> None:
         vhdl_str += '";\n'
     vhdl_str += "end package emulate_bitstream;"
 
+    # Legacy mode does not output configuration bits for the first and last row
+    if legacy:
+        logger.info("Legacy FABulous 1.0 bitstream generation enabled.")
+        start_row = num_rows - 2
+        stop_row = 0
+    else:
+        start_row = num_rows - 1
+        stop_row = -1
+
     # Top/bottom rows have no bitstream content (hardcoded throughout FABulous)
     # reversed row order
-    for y in range(num_rows - 2, 0, -1):
+    for y in range(start_row, stop_row, -1):
         for x in range(num_columns):
             tileKey = f"X{x}Y{y}"
             curStr = ",".join((tileKey, specDict["TileMap"][tileKey], str(x), str(y)))
