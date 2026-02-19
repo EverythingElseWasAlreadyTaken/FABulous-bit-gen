@@ -129,7 +129,7 @@ def genBitstream(fasmFile: str, specFile: str, bitstreamFile: str) -> None:
         num_rows = max(int(coordsMatch.group(2)) + 1, num_rows)
     outStr = ""
     bitStr = bytes.fromhex("00AAFF01000000010000000000000000FAB0FAB1")
-    bit_array = [[b"" for x in range(25)] for y in range(num_columns)]
+    bit_array = [[b"" for x in range(32)] for y in range(num_columns)]
 
     verilog_str = ""
     vhdl_str = (
@@ -212,7 +212,7 @@ def genBitstream(fasmFile: str, specFile: str, bitstreamFile: str) -> None:
             outStr += curStr + "\n"
 
     for i in range(num_columns):
-        for j in range(25):
+        for j in range(32):
             bin_temp = f"{i:05b}"[::-1]
             frame_select = ["0" for k in range(32)]
 
