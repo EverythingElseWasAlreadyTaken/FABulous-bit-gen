@@ -44,6 +44,7 @@ source = { editable = "." }
 dependencies = [
     { name = "fabulous-fasm" },
     { name = "loguru" },
+    { name = "pyyaml" },
 ]
 
 [package.dev-dependencies]
@@ -58,6 +59,7 @@ dev = [
 requires-dist = [
     { name = "fabulous-fasm", specifier = ">=0.2.0" },
     { name = "loguru", specifier = ">=0.7.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
 ]
 
 [package.metadata.requires-dev]

@@ -18,7 +18,7 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 
-dependencies = ['loguru>=0.7.0', 'FABulous-fasm>=0.2.0']
+dependencies = ['loguru>=0.7.0', 'FABulous-fasm>=0.2.0', 'pyyaml>=6.0']
 
 [project.urls]
 Repository = "https://github.com/FPGA-Research/FABulous-bit-gen"
@@ -26,13 +26,15 @@ Documentation = "https://fabulous.readthedocs.io"
 
 [project.scripts]
 bit_gen = "fabulous_bit_gen.bit_gen:bit_gen"
+neg_bit = "fabulous_neg_bit.neg_bit:neg_bit"
+dump_spec = "fabulous_neg_bit.dump_spec:dump_spec_cli"
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "node-and-date"
 
 [tool.setuptools.packages.find]
-include = ["fabulous_bit_gen*"]
+include = ["fabulous_bit_gen*", "fabulous_neg_bit*"]
 
 [tool.setuptools.package-data]
 fabulous_bit_gen = ["**/*"]

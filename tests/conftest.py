@@ -76,14 +76,20 @@ def temp_output_dir(tmp_path: Path) -> Path:
 
 @pytest.fixture(scope="session")
 def test_data_dir() -> Path:
-    """Path to test data directory."""
+    """Path to tracked test data directory (small design files)."""
     return Path(__file__).parent / "test_data"
 
 
 @pytest.fixture(scope="session")
-def real_spec_dict(test_data_dir: Path) -> dict[str, Any]:
-    """Load real bitstream spec from test data (shared across all designs)."""
-    spec_file = test_data_dir / "bitStreamSpec.bin"
+def model_files_dir() -> Path:
+    """Path to gitignored model files directory (large binaries, fabric specs)."""
+    return Path(__file__).parent / "test_data" / "model_files"
+
+
+@pytest.fixture(scope="session")
+def real_spec_dict(model_files_dir: Path) -> dict[str, Any]:
+    """Load real bitstream spec from model files (shared across all designs)."""
+    spec_file = model_files_dir / "bitStreamSpec.bin"
     with spec_file.open("rb") as f:
         return pickle.load(f)
 
