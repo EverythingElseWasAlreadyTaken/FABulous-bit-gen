@@ -18,7 +18,7 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 
-dependencies = ['loguru>=0.7.0', 'FABulous-fasm>=0.2.0', 'packaging>=24.0']
+dependencies = ['loguru>=0.7.0', 'FABulous-fasm>=0.2.0']
 
 [project.urls]
 Repository = "https://github.com/FPGA-Research/FABulous-bit-gen"

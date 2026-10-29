@@ -42,7 +42,6 @@ from fasm import (
     set_feature_to_str,
 )
 from loguru import logger
-from packaging.version import Version
 
 from fabulous_bit_gen.custom_exception import SpecMissMatch
 
@@ -67,6 +66,9 @@ and < FRAME_BITS_PER_ROW - FRAME_SELECT_WIDTH (outside column-index field).
 
 FABULOUS_VERSION: str = "1.0"
 """Default FABulous version string."""
+
+_CARRY_MUX_ALIAS: dict[str, str] = {"I0mux": "IOmux", "IOmux": "I0mux"}
+"""Both spellings of the LUT carry-in mux config bit, each mapped to the other."""
 
 
 @dataclass(frozen=True)
@@ -177,7 +179,7 @@ def _apply_fasm_features(
     tile_bits: dict[str, list[int]],
     tile_bits_no_mask: dict[str, list[int]],
     bitstream_format: BitstreamFormat,
-) -> None:
+) -> int:
     """Apply FASM features to tile bit arrays in place. Skips CLK features.
 
     Parameters
@@ -193,6 +195,11 @@ def _apply_fasm_features(
     bitstream_format : BitstreamFormat
         Resolved format settings; version is used to apply compatibility fixes.
 
+    Returns
+    -------
+    int
+        Number of features remapped between the I0mux and IOmux spellings.
+
     Raises
     ------
     SpecMissMatch
@@ -202,6 +209,7 @@ def _apply_fasm_features(
     # overwrites are detected regardless of the bit value.
     touched_bits: dict[str, set] = {tile: set() for tile in tile_bits}
     touched_bits_no_mask: dict[str, set] = {tile: set() for tile in tile_bits_no_mask}
+    carry_mux_remaps = 0
 
     for line in canon_list:
         if not line.set_feature:
@@ -234,20 +242,15 @@ def _apply_fasm_features(
         tile_spec = spec_dict["TileSpecs"][tile_loc]
         spec_feature_name = feature_name
 
-        # Workaround for a I0mux naming inconsistency in older FABulous versions.
-        # This has been resolved in newer nextpnr and FABulous versions,
-        # but we have to remap the feature name for compatibility with older specs.
-        if (
-            "I0mux" in feature_name
-            and feature_name not in tile_spec
-            and Version(bitstream_format.fabulous_version) < Version("2.0")
-        ):
-            candidate = feature_name.replace("I0mux", "IOmux")
+        # The LUT carry-in mux bit is spelled I0mux (digit zero) by nextpnr since
+        # YosysHQ/nextpnr@ca74f47c3f and IOmux before; fabric templates before
+        # FPGA-Research/FABulous#1132 also say IOmux. Either side can be old,
+        # independent of FABulousVersion, so accept both spellings both ways.
+        if feature_name not in tile_spec and feature_parts[2] in _CARRY_MUX_ALIAS:
+            candidate = f"{feature_parts[1]}.{_CARRY_MUX_ALIAS[feature_parts[2]]}"
             if candidate in tile_spec:
-                logger.debug(
-                    f"Remapping feature '{feature_name}' → '{candidate}' "
-                    f"(spec version {bitstream_format.fabulous_version!r})"
-                )
+                logger.debug(f"Remapping feature '{feature_name}' → '{candidate}'")
+                carry_mux_remaps += 1
                 spec_feature_name = candidate
 
         if spec_feature_name in tile_spec:
@@ -292,6 +295,7 @@ def _apply_fasm_features(
                 f"Feature: {feature_name}\n"
                 "found in fasm file was not found in the bitstream spec"
             )
+    return carry_mux_remaps
 
 
 def _compute_grid_size(tile_bits: dict[str, list[int]]) -> tuple[int, int]:
@@ -555,7 +559,7 @@ def gen_bitstream(fasm_file: str, spec_file: str, bitstream_file: str) -> None:
     tile_bits = {tile: [0] * total_bits for tile in spec_dict["TileMap"]}
     tile_bits_no_mask = {tile: [0] * total_bits for tile in spec_dict["TileMap"]}
 
-    _apply_fasm_features(
+    carry_mux_remaps = _apply_fasm_features(
         canon_list, spec_dict, tile_bits, tile_bits_no_mask, bitstream_format
     )
 
@@ -595,6 +599,13 @@ def gen_bitstream(fasm_file: str, spec_file: str, bitstream_file: str) -> None:
         f.write(vhdl_str)
     with output_path.with_suffix(".bin").open("wb") as f:
         f.write(bitstream_bytes)
+
+    if carry_mux_remaps:
+        logger.warning(
+            f"Remapped {carry_mux_remaps} carry mux feature(s) between I0mux and "
+            "IOmux: the FASM and bitstream spec spell it differently. Your FABulous "
+            "project or nextpnr might need an update."
+        )
 
 
 # Keep backwards-compatible function name

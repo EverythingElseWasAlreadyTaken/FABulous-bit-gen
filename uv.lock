@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 
 [[package]]
@@ -44,7 +44,6 @@ source = { editable = "." }
 dependencies = [
     { name = "fabulous-fasm" },
     { name = "loguru" },
-    { name = "packaging" },
 ]
 
 [package.dev-dependencies]
@@ -59,7 +58,6 @@ dev = [
 requires-dist = [
     { name = "fabulous-fasm", specifier = ">=0.2.0" },
     { name = "loguru", specifier = ">=0.7.0" },
-    { name = "packaging", specifier = ">=24.0" },
 ]
 
 [package.metadata.requires-dev]
