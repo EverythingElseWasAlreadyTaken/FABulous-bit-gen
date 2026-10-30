@@ -752,7 +752,8 @@ class TestGenBitstreamVersionCompat:
     def _spec_with_iomux(self, base: dict, version: str) -> dict:
         """Spec using old IOmux naming (capital-O) for the given version.
 
-        FASM feature 'X0Y1.A.I0mux' → feature_name 'A.I0mux'; old spec stores 'A.IOmux'.
+        FASM feature 'X0Y1.A.I0mux' -> feature_name 'A.I0mux'; old spec stores
+        'A.IOmux'.
         """
         spec = copy.deepcopy(base)
         spec["FABulousVersion"] = version
@@ -2485,7 +2486,7 @@ class TestGenBitstreamBinaryOutput:
         assert content.startswith(bytes.fromhex("A1B2C3D4"))
         assert content.endswith((1 << 7).to_bytes(2, byteorder="big"))
         # 4-byte header + (2 cols * 1 frame * (2-byte frame-select + 2-byte data))
-        # + 2-byte desync frame (FrameBitsPerRow=16 → word_bytes=2).
+        # + 2-byte desync frame (FrameBitsPerRow=16 -> word_bytes=2).
         assert len(content) == 4 + (2 * 1 * (2 + 2)) + 2
 
 

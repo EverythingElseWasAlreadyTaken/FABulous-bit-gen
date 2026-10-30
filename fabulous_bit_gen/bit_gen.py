@@ -5,18 +5,18 @@
 Binary bitstream structure::
 
     [ 20-byte sync header           ]
-    for each column (x = 0 … num_columns-1):
-      for each frame (f = 0 … MaxFramesPerCol-1):
-        [ frame-select word         ]  — addresses column + frame
-        [ frame data bytes          ]  — num_rows × ceil(FrameBitsPerRow/8) bytes
-    [ desync frame                  ]  — bit DESYNC_BIT set
+    for each column (x = 0 ... num_columns-1):
+      for each frame (f = 0 ... MaxFramesPerCol-1):
+        [ frame-select word         ]  - addresses column + frame
+        [ frame data bytes          ]  - num_rows x ceil(FrameBitsPerRow/8) bytes
+    [ desync frame                  ]  - bit DESYNC_BIT set
 
-Frame-select word (FrameBitsPerRow-bit, big-endian) — default layout:
+Frame-select word (FrameBitsPerRow-bit, big-endian) - default layout:
   - Bits [31:27]: column index (FrameSelectWidth = 5 bits, normal binary order).
   - Bits [26:21]: unused in the default configuration (always 0).
-  - Bit  [20]:    desync flag (desync_flag) — set only in the trailing desync frame.
-  - Bits [19:0]:  frame strobe — bit ``f`` set selects frame index ``f``
-                  (one-hot, supports up to 20 frames, indices 0–19).
+  - Bit  [20]:    desync flag (desync_flag) - set only in the trailing desync frame.
+  - Bits [19:0]:  frame strobe - bit ``f`` set selects frame index ``f``
+                  (one-hot, supports up to 20 frames, indices 0-19).
 
 Frame data bytes:
   Concatenation of FrameBitsPerRow configuration bits from each emitted row
@@ -156,7 +156,7 @@ def bitstring_to_bytes(s: str) -> bytes:
 def _parse_fasm_to_canon_list(fasm_file: str) -> list:
     """Parse a FASM file and return its canonicalised feature list.
 
-    Two-pass: raw parse → canonical string → re-parse to resolve shorthand.
+    Two-pass: raw parse -> canonical string -> re-parse to resolve shorthand.
 
     Parameters
     ----------
@@ -226,7 +226,7 @@ def _apply_fasm_features(
         if len(feature_parts) > 3:
             logger.warning(
                 f"Feature '{feature_str}' has {len(feature_parts)} dot-separated "
-                "parts; only the first three are used — trailing parts are ignored."
+                "parts; only the first three are used - trailing parts are ignored."
             )
         tile_loc = feature_parts[0]
         feature_name = ".".join((feature_parts[1], feature_parts[2]))
@@ -249,7 +249,7 @@ def _apply_fasm_features(
         if feature_name not in tile_spec and feature_parts[2] in _CARRY_MUX_ALIAS:
             candidate = f"{feature_parts[1]}.{_CARRY_MUX_ALIAS[feature_parts[2]]}"
             if candidate in tile_spec:
-                logger.debug(f"Remapping feature '{feature_name}' → '{candidate}'")
+                logger.debug(f"Remapping feature '{feature_name}' -> '{candidate}'")
                 carry_mux_remaps += 1
                 spec_feature_name = candidate
 
@@ -531,7 +531,7 @@ def gen_bitstream(fasm_file: str, spec_file: str, bitstream_file: str) -> None:
         Path to the FASM file.
     spec_file : str
         Path to the pickle spec file
-        (``TileMap``, ``TileSpecs``, ``FrameMap``, ``ArchSpecs``, …).
+        (``TileMap``, ``TileSpecs``, ``FrameMap``, ``ArchSpecs``, ...).
     bitstream_file : str
         Base output path; extension is replaced for each output format.
 

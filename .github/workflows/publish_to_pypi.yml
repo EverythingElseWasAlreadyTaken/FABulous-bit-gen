@@ -55,10 +55,10 @@ jobs:
     - name: Check release type
       run: |
         if [ "${{ github.event.release.prerelease }}" = "true" ]; then
-          echo "📦 Publishing PRE-RELEASE to PyPI"
+          echo "Publishing PRE-RELEASE to PyPI"
           echo "Users will need to use: pip install FABulous-bit-gen --pre"
         else
-          echo "🚀 Publishing STABLE RELEASE to PyPI"
+          echo "Publishing STABLE RELEASE to PyPI"
           echo "Users can install with: pip install FABulous-bit-gen"
         fi
 

@@ -18,7 +18,7 @@
 * backwards-compat -genBitstream flag + improved help text ([01b5fd3](https://github.com/FPGA-Research/FABulous-bit-gen/commit/01b5fd349ccbf5300a42460b7b326a615555ae31))
 * extend overwrite detection to unmasked bitstream (TileSpecs_No_Mask) ([5fd5c79](https://github.com/FPGA-Research/FABulous-bit-gen/commit/5fd5c799e4bb1dbacaeb9d3b98faee86d4345222))
 * read FABulousVersion from spec dict with default 1.0 ([191300a](https://github.com/FPGA-Research/FABulous-bit-gen/commit/191300a211c2c4637233bd8afaf586a4a828f8e9))
-* remap I0mux → IOmux for old FABulous spec versions ([232bf87](https://github.com/FPGA-Research/FABulous-bit-gen/commit/232bf874a8bb2a32f8ed79bcbea10833da50faaf))
+* remap I0mux -> IOmux for old FABulous spec versions ([232bf87](https://github.com/FPGA-Research/FABulous-bit-gen/commit/232bf874a8bb2a32f8ed79bcbea10833da50faaf))
 * warn when a FASM feature overwrites an already-set tile bit ([a730033](https://github.com/FPGA-Research/FABulous-bit-gen/commit/a730033e5d4a032c71e627c7c2c1ab74fb4757cd))
 
 

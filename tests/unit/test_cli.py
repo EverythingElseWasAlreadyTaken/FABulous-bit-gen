@@ -92,8 +92,14 @@ class TestBitGenCLI:
                 ("a" * 255 + ".fasm", "spec.bin", "output.bin"),
             ),
             (
-                ["bit_gen", "genBitstream", "test_αβγ.fasm", "spec.bin", "output.bin"],
-                ("test_αβγ.fasm", "spec.bin", "output.bin"),
+                [
+                    "bit_gen",
+                    "genBitstream",
+                    "test_\u03b1\u03b2\u03b3.fasm",
+                    "spec.bin",
+                    "output.bin",
+                ],
+                ("test_\u03b1\u03b2\u03b3.fasm", "spec.bin", "output.bin"),
             ),
         ],
     )

@@ -158,7 +158,7 @@ class TestBitstringToBytesEdgeCases:
         with pytest.raises(
             ValueError, match=r"invalid literal for int\(\) with base 2"
         ):
-            bitstring_to_bytes("10α01")
+            bitstring_to_bytes("10\u03b101")
 
     def test_single_byte_boundary(self) -> None:
         """Test at single byte boundary (8 bits)."""

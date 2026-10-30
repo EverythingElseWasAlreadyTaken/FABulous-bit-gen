@@ -41,8 +41,8 @@ pytest tests/unit/test_genBitstream.py::ClassName::test_name -v
 
 `TestFullBitstreamIntegration` and `TestFullBitstreamIntegrationEdgeCases`
 are parametrized over all three designs via the session-scoped `design`
-fixture in `conftest.py`.  Each test is therefore executed three times —
-once per design — and its name will include the design name in brackets,
+fixture in `conftest.py`.  Each test is therefore executed three times -
+once per design - and its name will include the design name in brackets,
 e.g. `test_bitstream_output_matches_expected[sequential_16bit_en]`.
 
 For each run the test:
@@ -51,7 +51,7 @@ For each run the test:
 3. Compares the generated files against the corresponding files in
    `tests/test_data/<design>/reference/`.
 
-`TestFullBitstreamIntegrationFaultCases` is not parametrized — it only
+`TestFullBitstreamIntegrationFaultCases` is not parametrized - it only
 needs the shared spec to probe error paths (missing files, bad tile names,
 etc.) and does not depend on design-specific inputs.
 
@@ -73,7 +73,7 @@ generate `.hex` output; these files are kept for context and future use.
 | `temp_output_dir` | function | `tmp_path` wrapper, auto-cleaned |
 | `test_data_dir` | session | `Path` to `tests/test_data/` |
 | `real_spec_dict` | session | deserialized `bitStreamSpec.bin` |
-| `design` | session ×3 | paths for one design (fasm + reference outputs) |
+| `design` | session x3 | paths for one design (fasm + reference outputs) |
 | `synthetic_fasm_lines` | function | hand-crafted `FasmLine` list |
 | `synthetic_fasm_lines_with_clk` | function | includes a CLK line (filtered) |
 | `synthetic_fasm_lines_invalid_tile` | function | tile absent from spec |
